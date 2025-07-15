@@ -51,7 +51,7 @@ const LandingPage: React.FC = () => {
 
     const handleGetStarted = () => {
         // Navigate to the login page
-        navigate('/login');
+        navigate('/home');
     };
     
     return (
