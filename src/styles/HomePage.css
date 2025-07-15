@@ -44,11 +44,11 @@
     margin-top: 5vh;
     margin-bottom: 8px;
     color: #333;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .logo-text {
-    font-size: clamp(40px, 8vw, 58px);
+    font-size: clamp(90px, 8vw, 58px);
     font-weight: bold;
     margin-top: 5vh;
     margin-bottom: 10vh;
