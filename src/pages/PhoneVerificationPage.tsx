@@ -13,8 +13,8 @@ const PhoneVerificationPage: React.FC = () => {
     const handleSendCode = () => {
         // Here you would implement the actual code sending logic
         console.log(`Sending code to: +91 ${phoneNumber}`);
-        // Then you could navigate to a code verification page
-        // navigate('/verify-code');
+        //Then you could navigate to a code verification page
+        navigate('/verify-code', { state: { phoneNumber: phoneNumber } });
     };
     
     return (
@@ -49,7 +49,7 @@ const PhoneVerificationPage: React.FC = () => {
                 
                 <div className="page-center-content">
                     <div className="caduceus-icon">
-                        <img src="/caduceus.png" alt="Medical symbol" className="caduceus-image" />
+                        <img src="/HomePage/caduceus.png" alt="Medical symbol" className="caduceus-image" />
                     </div>
                     
                     <div className="bottom-actions">

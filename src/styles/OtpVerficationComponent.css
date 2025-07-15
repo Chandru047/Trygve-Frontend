@@ -1,0 +1,109 @@
+.otp-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px 0;
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+}
+
+.otp-input {
+  width: 40px;
+  height: 48px;
+  border: 1px solid #0066FF;
+  border-radius: 8px;
+  font-size: 20px;
+  text-align: center;
+  color: #000;
+  background-color: transparent;
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+}
+
+.otp-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+}
+
+.masked-phone {
+  font-weight: 500;
+  position: relative;
+  z-index: 10;
+}
+
+.resend-text {
+  text-align: center;
+  margin: 16px 0;
+  font-size: 14px;
+  color: #666;
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+}
+
+.resend-button {
+  background: none;
+  border: none;
+  color: #0066FF;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+}
+
+.caduceus-icon {
+  position: relative;
+  z-index: 1; /* Lower z-index for the logo */
+    margin-top: -200px;
+  margin-bottom: -20px; /* Changed from -40px to give space between logo and button */
+}
+
+.verification-title, 
+.verification-subtitle {
+  position: relative;
+  z-index: 10; /* Higher z-index for text elements */
+}
+
+.bottom-actions {
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+  margin-top: -30px; /* Add top margin to create space after the logo */
+}
+
+.verify-button {
+  width: 100%;
+  padding: 14px;
+  background-color: #0066FF;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: -200px; /* Changed from -20px to 0px to position button below logo */
+  position: relative;
+  z-index: 10; /* Higher z-index to appear above logo */
+}
+
+.verify-button:disabled {
+  background-color: #CCE0FF;
+  cursor: not-allowed;
+}
+
+/* To ensure the layout structure works correctly */
+.page-center-content {
+  position: relative; /* Create stacking context */
+}
+
+.verification-content {
+  position: relative;
+  z-index: 5; /* Create stacking context */
+}
+
+/* Back button needs to be above logo too */
+.verification-header, 
+.back-button {
+  position: relative;
+  z-index: 10;
+}
