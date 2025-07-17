@@ -40,7 +40,7 @@ const AccountSetupPage: React.FC = () => {
         console.log('Account created:', userData);
         
         // Navigate to home page
-        navigate('/home');
+        navigate('/signup-success');
     };
 
     const isFormValid = () => {

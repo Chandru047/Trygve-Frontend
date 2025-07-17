@@ -1,0 +1,140 @@
+.success-screen-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 0 20px;
+}
+
+.success-screen-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #2563eb;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #e5e7eb;
+}
+
+.success-screen-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.success-icon-container {
+    margin-bottom: 40px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.default-success-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkmark-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.checkmark-circle::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(37, 99, 235, 0.1);
+    border-radius: 50%;
+    top: -10px;
+    left: -10px;
+}
+
+.checkmark {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.success-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 16px;
+    line-height: 1.3;
+    max-width: 300px;
+}
+
+.success-subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 60px;
+    line-height: 1.5;
+    max-width: 280px;
+}
+
+.success-actions {
+    width: 100%;
+    max-width: 300px;
+}
+
+.success-button {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.success-button:hover {
+    background-color: #1d4ed8;
+}
+
+.success-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .success-screen-container {
+        padding: 0 16px;
+    }
+    
+    .success-title {
+        font-size: 20px;
+    }
+    
+    .success-subtitle {
+        font-size: 14px;
+    }
+}
