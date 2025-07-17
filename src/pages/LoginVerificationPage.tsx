@@ -63,7 +63,7 @@ const LoginVerificationPage: React.FC = () => {
         // For development purposes, log the OTP (remove in production)
         console.log(`Login OTP generated: ${generatedOtp}`);
         
-        alert('Login successful! OTP sent to your email.');
+    
         navigate('/otp-signin', { state: { email, phoneNumber } });
       } else {
         // Credentials don't match
@@ -83,6 +83,12 @@ const LoginVerificationPage: React.FC = () => {
     // Only allow digits and limit to 10 characters
     const value = e.target.value.replace(/\D/g, '').slice(0, 10);
     setPhoneNumber(value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && email.trim() && phoneNumber.trim()) {
+      handleVerify();
+    }
   };
 
   return (
@@ -116,6 +122,7 @@ const LoginVerificationPage: React.FC = () => {
               className="phone-input"
               value={email}
               onChange={handleEmailChange}
+              onKeyDown={handleKeyDown}
               placeholder="Enter your email address"
             />
           </div>
@@ -127,6 +134,7 @@ const LoginVerificationPage: React.FC = () => {
               className="phone-input"
               value={phoneNumber}
               onChange={handlePhoneChange}
+              onKeyDown={handleKeyDown}
               placeholder="Enter 10-digit phone number"
               maxLength={10}
             />

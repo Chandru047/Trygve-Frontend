@@ -32,6 +32,12 @@ const AccountSetupPage: React.FC = () => {
         }));
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && isFormValid()) {
+            handleCreateAccount();
+        }
+    };
+
     const handleCreateAccount = () => {
         // Create user object with form data
         const userData = {
@@ -46,8 +52,6 @@ const AccountSetupPage: React.FC = () => {
         
         // Store user data in localStorage
         localStorage.setItem('user', JSON.stringify(userData));
-        
-        console.log('Account created:', userData);
         
         // Navigate to home page
         navigate('/signup-success');
@@ -83,6 +87,7 @@ const AccountSetupPage: React.FC = () => {
                             placeholder="Enter Full Name"
                             value={formData.fullName}
                             onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
 
@@ -94,6 +99,7 @@ const AccountSetupPage: React.FC = () => {
                             placeholder="Enter Email Address"
                             value={formData.email}
                             onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
 
@@ -105,6 +111,7 @@ const AccountSetupPage: React.FC = () => {
                             placeholder="Arasur, Coimbatore"
                             value={formData.location}
                             onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                         <span className="location-icon"></span>
                     </div>
@@ -117,6 +124,7 @@ const AccountSetupPage: React.FC = () => {
                             placeholder="Enter Secondary Phone Number"
                             value={formData.secondaryPhone}
                             onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                 </div>

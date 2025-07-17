@@ -19,7 +19,6 @@ const PhoneVerificationPage: React.FC = () => {
         
         // For development purposes, log the OTP (remove in production)
         console.log(`Generated OTP: ${generatedOtp}`);
-        console.log(`Sending code to: +91 ${phoneNumber}`);
         
         // Navigate to OTP verification page
         navigate('/verify-code', { state: { phoneNumber: phoneNumber } });
@@ -51,6 +50,11 @@ const PhoneVerificationPage: React.FC = () => {
                         placeholder="12345 67890"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && phoneNumber.length >= 10) {
+                                handleSendCode();
+                            }
+                        }}
                         maxLength={10}
                     />
                 </div>

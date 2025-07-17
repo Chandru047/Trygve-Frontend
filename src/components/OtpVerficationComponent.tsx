@@ -51,8 +51,6 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
       // Clear the OTP from localStorage after successful verification
       localStorage.removeItem('otp');
       
-      // Show success message
-      alert('Success! OTP verified successfully.');
       
       // Navigate to the specified path or default to home
       navigate(successNavigationPath, { state: { phoneNumber: _phoneNumber } });
@@ -71,7 +69,6 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     // For development purposes, log the new OTP (remove in production)
     console.log(`New OTP generated: ${newOtp}`);
     
-    alert(`New OTP sent to +91 ${phoneNumber}`);
   };
 
   const handleBack = () => {
@@ -97,6 +94,11 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     // Move focus to previous input on backspace if current input is empty
     if (e.key === 'Backspace' && otp[index] === '' && index > 0 && inputRefs.current[index - 1]) {
       inputRefs.current[index - 1]?.focus();
+    }
+    
+    // Handle Enter key to verify OTP if all digits are filled
+    if (e.key === 'Enter' && otp.join('').length === 6) {
+      handleVerify();
     }
   };
 
