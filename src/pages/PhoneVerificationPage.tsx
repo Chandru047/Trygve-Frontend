@@ -11,9 +11,17 @@ const PhoneVerificationPage: React.FC = () => {
     };
     
     const handleSendCode = () => {
-        // Here you would implement the actual code sending logic
+        // Generate a random 6-digit OTP
+        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Store the OTP in localStorage with key "otp"
+        localStorage.setItem('otp', generatedOtp);
+        
+        // For development purposes, log the OTP (remove in production)
+        console.log(`Generated OTP: ${generatedOtp}`);
         console.log(`Sending code to: +91 ${phoneNumber}`);
-        //Then you could navigate to a code verification page
+        
+        // Navigate to OTP verification page
         navigate('/verify-code', { state: { phoneNumber: phoneNumber } });
     };
     

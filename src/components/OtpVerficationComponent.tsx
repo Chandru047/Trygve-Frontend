@@ -7,13 +7,15 @@ interface OTPVerificationPageProps {
   subtitle: string;
   buttonText: string;
   onVerify?: (otp: string, phoneNumber: string) => void;
+  onResend?: (phoneNumber: string) => void;
 }
 
 const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     title,
     subtitle,
     buttonText,
-    onVerify
+    onVerify,
+    onResend
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +34,43 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
       inputRefs.current[0].focus();
     }
   }, [location.state]);
+
+  const handleVerifyOtp = (enteredOtp: string, _phoneNumber: string) => {
+    // Get the stored OTP from localStorage
+    const storedOtp = localStorage.getItem('otp');
+    
+    if (!storedOtp) {
+      alert('No OTP found. Please request a new code.');
+      return;
+    }
+    
+    // Verify if the entered OTP matches the stored OTP
+    if (enteredOtp === storedOtp) {
+      // Clear the OTP from localStorage after successful verification
+      localStorage.removeItem('otp');
+      
+      // Show success message
+      alert('Success! OTP verified successfully.');
+      
+      // Navigate to home page or dashboard
+      navigate('/home');
+    } else {
+      alert('Invalid OTP. Please try again.');
+    }
+  };
+
+  const handleResendOtp = (phoneNumber: string) => {
+    // Generate a new random 6-digit OTP
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Store the new OTP in localStorage
+    localStorage.setItem('otp', newOtp);
+    
+    // For development purposes, log the new OTP (remove in production)
+    console.log(`New OTP generated: ${newOtp}`);
+    
+    alert(`New OTP sent to +91 ${phoneNumber}`);
+  };
 
   const handleBack = () => {
     navigate(-1);
@@ -63,18 +102,21 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     const otpString = otp.join('');
     if (otpString.length === 6) {
       if (onVerify) {
-        onVerify(otpString,phoneNumber);
+        onVerify(otpString, phoneNumber);
       } else {
-        console.log(`Verifying OTP: ${otpString} for phone number: ${phoneNumber}`);
-        // Default verification logic - navigate to success page or dashboard
-        // navigate('/dashboard');
+        // Use the built-in handleVerifyOtp function
+        handleVerifyOtp(otpString, phoneNumber);
       }
     }
   };
 
   const handleResendCode = () => {
-    alert(`Resending code to phone number: ${phoneNumber}`);
-    // Add your logic for resending code here
+    if (onResend) {
+      onResend(phoneNumber);
+    } else {
+      // Use the built-in handleResendOtp function
+      handleResendOtp(phoneNumber);
+    }
   };
 
   return (
