@@ -8,6 +8,7 @@ interface OTPVerificationPageProps {
   buttonText: string;
   onVerify?: (otp: string, phoneNumber: string) => void;
   onResend?: (phoneNumber: string) => void;
+  successNavigationPath?: string;
 }
 
 const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
@@ -15,7 +16,8 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     subtitle,
     buttonText,
     onVerify,
-    onResend
+    onResend,
+    successNavigationPath = '/home'
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,8 +54,8 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
       // Show success message
       alert('Success! OTP verified successfully.');
       
-      // Navigate to home page or dashboard
-      navigate('/home');
+      // Navigate to the specified path or default to home
+      navigate(successNavigationPath);
     } else {
       alert('Invalid OTP. Please try again.');
     }
