@@ -24,8 +24,22 @@ const AccountSetupPage: React.FC = () => {
     };
 
     const handleCreateAccount = () => {
-        console.log('Account data:', formData);
-        // Add your account creation logic here
+        // Create user object with form data
+        const userData = {
+            fullName: formData.fullName,
+            email: formData.email,
+            location: formData.location,
+            secondaryPhone: formData.secondaryPhone,
+            createdAt: new Date().toISOString(),
+            id: Date.now().toString() // Simple ID generation
+        };
+        
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        console.log('Account created:', userData);
+        
+        // Navigate to home page
         navigate('/home');
     };
 
