@@ -55,7 +55,7 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
       alert('Success! OTP verified successfully.');
       
       // Navigate to the specified path or default to home
-      navigate(successNavigationPath);
+      navigate(successNavigationPath, { state: { phoneNumber: _phoneNumber } });
     } else {
       alert('Invalid OTP. Please try again.');
     }
@@ -132,7 +132,7 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
       <div className="verification-content">
         <h1 className="verification-title">{title}</h1>
         <p className="verification-subtitle">
-          {subtitle} <span className="masked-phone">{phoneNumber ? `+91 ${phoneNumber.substring(0, 3)}*****${phoneNumber.substring(8)}` : ''}</span>
+          {subtitle} 
         </p>
         
         <div className="otp-input-container">

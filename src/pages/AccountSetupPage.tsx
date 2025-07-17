@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/AccountSetupPage.css';
 
 const AccountSetupPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         location: '',
         secondaryPhone: ''
     });
+
+    useEffect(() => {
+        // Get phone number from location state (passed from previous steps)
+        if (location.state && location.state.phoneNumber) {
+            setPhoneNumber(location.state.phoneNumber);
+        }
+    }, [location.state]);
 
     const handleBack = () => {
         navigate(-1);
@@ -29,6 +38,7 @@ const AccountSetupPage: React.FC = () => {
             fullName: formData.fullName,
             email: formData.email,
             location: formData.location,
+            phoneNumber: phoneNumber, // Primary phone number from signup
             secondaryPhone: formData.secondaryPhone,
             createdAt: new Date().toISOString(),
             id: Date.now().toString() // Simple ID generation

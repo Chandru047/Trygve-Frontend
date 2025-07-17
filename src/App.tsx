@@ -4,8 +4,10 @@ import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
 import OtpSignUp from './pages/OtpSignUp';
 import AccountSetupPage from './pages/AccountSetupPage';
-// Make sure the file exists at src/pages/SignUpSuccess.tsx
 import SignUpSuccess from './pages/SignUpSuccess';
+import LoginVerificationPage from './pages/LoginVerificationPage';
+import OtpSignIn from './pages/OtpSignIn';
+import SignInSuccess from './pages/SignInSuccess';
 import './App.css'
 
 function App() {
@@ -19,6 +21,10 @@ function App() {
         <Route path="/verify-code" element={<OtpSignUp />} />
         <Route path="/account-setup" element={<AccountSetupPage />} />
         <Route path="/signup-success" element={<SignUpSuccess />} />
+        <Route path="/login-verification" element={<LoginVerificationPage />} />
+        <Route path="/otp-signin" element={<OtpSignIn />} />
+        <Route path="/signin-success" element={<SignInSuccess />} />
+        <Route path="/DashBoard" element={<div>DashBoard(Coming Soon!)</div>} />
       </Routes>
     </Router>
   )

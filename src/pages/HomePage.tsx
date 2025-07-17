@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
 
     const handleLogin = () => {
         // Navigate to login form
-        navigate('/signin');
+        navigate('/login-verification');
     };
 
     return (

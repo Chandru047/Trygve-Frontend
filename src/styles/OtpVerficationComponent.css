@@ -25,11 +25,6 @@
   box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
 }
 
-.masked-phone {
-  font-weight: 500;
-  position: relative;
-  z-index: 10;
-}
 
 .resend-text {
   text-align: center;
@@ -63,6 +58,13 @@
 .verification-subtitle {
   position: relative;
   z-index: 10; /* Higher z-index for text elements */
+}
+.verification-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2563eb;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .bottom-actions {
