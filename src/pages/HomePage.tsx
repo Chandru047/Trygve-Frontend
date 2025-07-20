@@ -7,7 +7,7 @@ const LoginPage: React.FC = () => {
 
     const handleSignUp = () => {
         // Navigate to signup page
-        navigate('/signup');
+        navigate('/phone-verification');
     };
 
     const handleLogin = () => {

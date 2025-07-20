@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthFlow } from '../context/AuthFlowContext';
+import firebaseAuthService from '../firebase/auth';
 import '../styles/OtpVerficationComponent.css';
 
 interface OTPVerificationPageProps {
@@ -20,59 +22,57 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     successNavigationPath = '/home'
 }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { phoneNumber, confirmationResult, setConfirmationResult } = useAuthFlow();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   
   useEffect(() => {
-    // Get phone number from location state
-    if (location.state && location.state.phoneNumber) {
-      setPhoneNumber(location.state.phoneNumber);
-    }
-    
-    // Focus on first input when component mounts
-    if (inputRefs.current[0]) {
+    if (!phoneNumber || !confirmationResult && !isVerified) {
+      navigate('/phone-verification');
+    } else if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
-  }, [location.state]);
+  }, [phoneNumber, confirmationResult, navigate, isVerified]);
 
-  const handleVerifyOtp = (enteredOtp: string, _phoneNumber: string) => {
-    // Get the stored OTP from localStorage
-    const storedOtp = localStorage.getItem('otp');
-    
-    if (!storedOtp) {
-      alert('No OTP found. Please request a new code.');
+  const handleResendFirebaseOtp = async () => {
+    if (!phoneNumber) {
+      alert("Phone number not found. Please go back.");
       return;
     }
-    
-    // Verify if the entered OTP matches the stored OTP
-    if (enteredOtp === storedOtp) {
-      // Clear the OTP from localStorage after successful verification
-      localStorage.removeItem('otp');
-      
-      
-      // Navigate to the specified path or default to home
-      navigate(successNavigationPath, { state: { phoneNumber: _phoneNumber } });
+    setLoading(true);
+    alert("Requesting a new code...");
+    const result = await firebaseAuthService.sendOTP(phoneNumber);
+    if (result.success && result.confirmationResult) {
+      setConfirmationResult(result.confirmationResult);
+      alert("A new code has been sent.");
     } else {
-      alert('Invalid OTP. Please try again.');
+      alert(`Failed to resend code: ${result.error}`);
     }
+    setLoading(false);
   };
 
-  const handleResendOtp = (phoneNumber: string) => {
-    // Generate a new random 6-digit OTP
-    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  const handleVerifyFirebaseOtp = async (enteredOtp: string) => {
+    if (!confirmationResult) {
+      alert('Verification session expired. Please try again.');
+      return;
+    }
+    setLoading(true);
     
-    // Store the new OTP in localStorage
-    localStorage.setItem('otp', newOtp);
+    const result = await firebaseAuthService.verifyOTP(enteredOtp, confirmationResult);
     
-    // For development purposes, log the new OTP (remove in production)
-    console.log(`New OTP generated: ${newOtp}`);
-    
-  };
+    if (result.success && result.user) {
+      setIsVerified(true);
+      localStorage.setItem('firebaseUser', JSON.stringify(result.user));
+      
+      navigate(successNavigationPath);
 
-  const handleBack = () => {
-    navigate(-1);
+      setConfirmationResult(null);
+    } else {
+      alert(`Verification failed: ${result.error}`);
+      setLoading(false);
+    }
   };
 
   const handleChange = (index: number, value: string) => {
@@ -97,36 +97,38 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
     }
     
     // Handle Enter key to verify OTP if all digits are filled
-    if (e.key === 'Enter' && otp.join('').length === 6) {
+    if (e.key === 'Enter' && otp.join('').length === 6 && !loading) {
       handleVerify();
     }
   };
 
   const handleVerify = () => {
     const otpString = otp.join('');
-    if (otpString.length === 6) {
-      if (onVerify) {
+    if (otpString.length === 6 && !loading) {
+      if (onVerify && phoneNumber) {
         onVerify(otpString, phoneNumber);
       } else {
-        // Use the built-in handleVerifyOtp function
-        handleVerifyOtp(otpString, phoneNumber);
+        // Use Firebase verification if it's a Firebase OTP, otherwise use the built-in method
+        handleVerifyFirebaseOtp(otpString);
       }
     }
   };
 
   const handleResendCode = () => {
-    if (onResend) {
+    if (loading) return;
+    
+    if (onResend && phoneNumber) {
       onResend(phoneNumber);
     } else {
-      // Use the built-in handleResendOtp function
-      handleResendOtp(phoneNumber);
+      // Use Firebase resend if it's a Firebase OTP, otherwise use the built-in method
+      handleResendFirebaseOtp();
     }
   };
 
   return (
     <div className="verification-container">
       <div className="verification-header">
-        <button className="back-button" onClick={handleBack}>
+        <button className="back-button" onClick={() => navigate(-1)} disabled={loading}>
           &lt;
         </button>
       </div>
@@ -148,12 +150,20 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               className="otp-input"
+              disabled={loading}
             />
           ))}
         </div>
         
         <p className="resend-text">
-          Didn't receive code? <button className="resend-button" onClick={handleResendCode}>Resend</button>
+          Didn't receive code? 
+          <button 
+            className="resend-button" 
+            onClick={handleResendCode}
+            disabled={loading}
+          >
+            {loading ? 'Sending...' : 'Resend'}
+          </button>
         </p>
         
         <div className="page-center-content">
@@ -165,9 +175,9 @@ const OTPVerificationPage: React.FC<OTPVerificationPageProps> = ({
             <button 
               className="verify-button"
               onClick={handleVerify}
-              disabled={otp.join('').length !== 6}
+              disabled={otp.join('').length !== 6 || loading}
             >
-              {buttonText}
+              {loading ? 'Verifying...' : buttonText}
             </button>
           </div>
         </div>

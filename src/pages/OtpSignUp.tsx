@@ -1,14 +1,14 @@
-import OtpVerficationComponent from '../components/OtpVerficationComponent';
+import OTPVerificationPage from '../components/OtpVerficationComponent';
 
-const OTPVerificationWrapper = () => {
+const OtpSignUp = () => {
   return (
-    <OtpVerficationComponent
-      title="OTP Verification"
-      subtitle="Enter the verification code we just sent to your number"
+    <OTPVerificationPage
+      title="Verify Your Number"
+      subtitle="Enter the code we sent to your number to complete the sign up."
       buttonText="Verify"
       successNavigationPath="/account-setup"
     />
   );
 };
 
-export default OTPVerificationWrapper;
+export default OtpSignUp;

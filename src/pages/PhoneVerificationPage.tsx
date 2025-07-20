@@ -1,31 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import firebaseAuthService from '../firebase/auth';
+import { useAuthFlow } from '../context/AuthFlowContext'; // Import the hook
 import '../styles/PhoneVerificationPage.css';
 
 const PhoneVerificationPage: React.FC = () => {
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { setPhoneNumber: setAuthPhoneNumber, setConfirmationResult } = useAuthFlow(); // Use the context
+
+    useEffect(() => {
+        // Initialize reCAPTCHA when component mounts.
+        // The cleanup is removed from here to prevent clearing the confirmation result
+        // before navigating to the OTP verification page.
+        firebaseAuthService.initializeRecaptcha('recaptcha-container');
+        // The return statement with cleanup is removed.
+    }, []);
     
     const handleBack = () => {
-        navigate('/login');
+        navigate(-1);
     };
     
-    const handleSendCode = () => {
-        // Generate a random 6-digit OTP
-        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const handleSendCode = async () => {
+        if (!phoneNumber || phoneNumber.length !== 10) {
+            alert('Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        setLoading(true);
         
-        // Store the OTP in localStorage with key "otp"
-        localStorage.setItem('otp', generatedOtp);
+        const result = await firebaseAuthService.sendOTP(phoneNumber);
         
-        // For development purposes, log the OTP (remove in production)
-        console.log(`Generated OTP: ${generatedOtp}`);
+        if (result.success && result.confirmationResult) {
+            // Store results in context
+            setAuthPhoneNumber(phoneNumber);
+            setConfirmationResult(result.confirmationResult);
+            // Navigate without state
+            navigate('/verify-code');
+        } else {
+            alert(`Failed to send OTP: ${result.error}`);
+        }
         
-        // Navigate to OTP verification page
-        navigate('/verify-code', { state: { phoneNumber: phoneNumber } });
+        setLoading(false);
     };
     
     return (
         <div className="verification-container">
+            {/* reCAPTCHA container - hidden */}
+            <div id="recaptcha-container" style={{ display: 'none' }}></div>
+            
             <div className="verification-header">
                 <button className="back-button" onClick={handleBack}>
                     &lt;
@@ -51,11 +75,12 @@ const PhoneVerificationPage: React.FC = () => {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter' && phoneNumber.length >= 10) {
+                            if (e.key === 'Enter' && phoneNumber.length >= 10 && !loading) {
                                 handleSendCode();
                             }
                         }}
                         maxLength={10}
+                        disabled={loading}
                     />
                 </div>
                 
@@ -68,9 +93,9 @@ const PhoneVerificationPage: React.FC = () => {
                         <button 
                             className="send-code-button"
                             onClick={handleSendCode}
-                            disabled={phoneNumber.length < 10}
+                            disabled={phoneNumber.length < 10 || loading}
                         >
-                            Send Code
+                            {loading ? 'Sending...' : 'Send Code'}
                         </button>
                         
                         <p className="login-link">
